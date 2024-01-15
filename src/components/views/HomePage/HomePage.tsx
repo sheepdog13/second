@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Wapper = styled.div`
@@ -6,7 +7,6 @@ const Wapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-color: #000;
 `;
@@ -14,6 +14,7 @@ const Wapper = styled.div`
 const Logo = styled.img`
   width: 150px;
   height: 51px;
+  margin-top: 310px;
 `;
 
 const Btn = styled.button`
@@ -26,10 +27,17 @@ const Btn = styled.button`
 `;
 
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <Wapper>
       <Logo src={`${process.env.PUBLIC_URL}/img/logo-black.png`} alt="logo" />
-      <Btn>주문하러 가기</Btn>
+      <Btn
+        onClick={() => {
+          navigate("/order");
+        }}
+      >
+        주문하러 가기
+      </Btn>
     </Wapper>
   );
 }
