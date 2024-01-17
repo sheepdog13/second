@@ -31,6 +31,7 @@ const GlobalStyle = createGlobalStyle`
     display: block;
   }
   body {
+    margin: 0 auto;
     width: 350px;
     height: 864px;
     line-height: 1;
