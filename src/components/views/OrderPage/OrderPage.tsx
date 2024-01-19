@@ -3,15 +3,30 @@ import { asynsGetFetch } from "../../../_reducers/item";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ItemComp from "./ItemComp";
 import styled from "styled-components";
+import Header from "../../common/Header";
+import OrderSummary from "../../common/OrderSummary";
 
-const FixedBox = styled.div`
+const Wapper = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0;
-  background-color: #000;
-  color: #fff;
+  align-items: center;
+`;
+
+const LoadingDesc = styled.div`
+  margin-top: 363px;
+  font-size: 18px;
+  line-height: 21.78px;
+  text-align: center;
+`;
+
+const ItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+  margin-top: 52px;
 `;
 
 function OrderPage() {
@@ -23,31 +38,27 @@ function OrderPage() {
   // state 가져오기
   const items = useAppSelector((state) => state.item.data);
   const isload = useAppSelector((state) => state.item.loading);
-  const sum = useAppSelector((state) => state.order.counter);
-  const price = useAppSelector((state) => state.order.price);
 
-  if (isload === "pending") {
-    // 로딩 중 상태일 때의 랜더링
-    return <div>Loading...</div>;
-  }
-
-  if (isload === "succeeded") {
-    // 데이터가 도착했을 때의 랜더링
-    return (
-      <>
-        <FixedBox>
-          <div>총 수량 :{sum}</div>
-          <div>총 가격 :{price}</div>
-        </FixedBox>
-        <div>
-          {items.map((item, index) => (
-            <ItemComp key={index} item={item} />
-          ))}
-        </div>
-      </>
-    );
-  }
-  return <div>Error occurred</div>;
+  return (
+    <Wapper>
+      <Header />
+      {isload === "succeeded" ? (
+        <>
+          <ItemWrapper>
+            {items.map((item, index) => (
+              <ItemComp key={index} item={item} />
+            ))}
+          </ItemWrapper>
+        </>
+      ) : (
+        <LoadingDesc>
+          목록을
+          <br /> 불러오고 있습니다.
+        </LoadingDesc>
+      )}
+      <OrderSummary />
+    </Wapper>
+  );
 }
 
 export default OrderPage;
