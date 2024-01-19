@@ -11,7 +11,6 @@ interface ItemProps {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   width: 301px;
   height: 80px;
   padding: 9px;
@@ -28,12 +27,7 @@ const ImgBox = styled.div`
   background: #d9d9d9;
 `;
 
-const DescBox = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const NameBox = styled.div`
+const TopBox = styled.div`
   display: flex;
   flex-direction: row;
   text-align: center;
@@ -55,18 +49,25 @@ const Event = styled.div`
   color: #fff;
 `;
 
+const Content = styled.div`
+  margin-left: 12px;
+  flex: 1;
+`;
+
+const BottomBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const CounterBox = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 18px;
+  margin-top: 15px;
   gap: 5px;
   color: #000;
   text-align: center;
   font-size: 18px;
-  button {
-    color: #000;
-    font-size: 18px;
-  }
 `;
 
 const Price = styled.div`
@@ -85,34 +86,36 @@ function ItemComp({ item }: ItemProps) {
   return (
     <Wrapper>
       <ImgBox />
-      <DescBox>
-        <NameBox>
+      <Content>
+        <TopBox>
           <div>{item.name}</div>
           <Event>이벤트</Event>
-        </NameBox>
-        <CounterBox>
-          <button
-            onClick={() => {
-              setCounter((prev) => prev - 1);
-              dispatch(decrase(item.price));
-            }}
-          >
-            -
-          </button>
-          <div>{counter}</div>
-          <button
-            onClick={() => {
-              setCounter((prev) => prev + 1);
-              dispatch(increase(item.price));
-            }}
-          >
-            +
-          </button>
-        </CounterBox>
-      </DescBox>
-      <Price>
-        <div>{item.price}원</div>
-      </Price>
+        </TopBox>
+        <BottomBox>
+          <CounterBox>
+            <button
+              onClick={() => {
+                setCounter((prev) => prev - 1);
+                dispatch(decrase(item.price));
+              }}
+            >
+              -
+            </button>
+            <div>{counter}</div>
+            <button
+              onClick={() => {
+                setCounter((prev) => prev + 1);
+                dispatch(increase(item.price));
+              }}
+            >
+              +
+            </button>
+          </CounterBox>
+          <Price>
+            <div>{item.price}원</div>
+          </Price>
+        </BottomBox>
+      </Content>
     </Wrapper>
   );
 }
