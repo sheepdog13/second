@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { item } from "../../../types/item";
 import { useAppDispatch } from "../../../redux/hooks";
 import { decrase, increase } from "../../../_reducers/order";
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   margin-bottom: 18px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  background-color: #fff;
+  background-color: ${(props) => props.color};
 `;
 
 const ImgBox = styled.div`
@@ -70,6 +70,10 @@ const CounterBox = styled.div`
   font-size: 18px;
 `;
 
+const Btn = styled.button<{ $isActive: boolean }>`
+  cursor: ${(props) => (props.$isActive ? "pointer" : "auto")};
+`;
+
 const Price = styled.div`
   display: flex;
   flex-direction: column;
@@ -83,36 +87,53 @@ const Price = styled.div`
 function ItemComp({ item }: ItemProps) {
   const dispatch = useAppDispatch();
   const [counter, setCounter] = useState<number>(0);
+  const [plus, setPlus] = useState<boolean>(false);
+  const [minus, setMinus] = useState<boolean>(false);
+
+  const addCommas = (price: number) => {
+    const commaprice = price.toLocaleString("ko-KR");
+    return commaprice;
+  };
+
+  useEffect(() => {
+    setPlus(counter >= 0 && counter !== 999);
+    setMinus(counter > 0);
+  }, [counter]);
+
   return (
-    <Wrapper>
+    <Wrapper color={counter === 0 ? "#ffffff" : "rgba(247, 90, 47, 0.10)"}>
       <ImgBox />
       <Content>
         <TopBox>
           <div>{item.name}</div>
-          <Event>이벤트</Event>
+          {item.event === 1 && <Event>이벤트</Event>}
         </TopBox>
         <BottomBox>
           <CounterBox>
-            <button
+            <Btn
+              $isActive={minus}
+              disabled={!minus}
               onClick={() => {
                 setCounter((prev) => prev - 1);
                 dispatch(decrase(item.price));
               }}
             >
               -
-            </button>
+            </Btn>
             <div>{counter}</div>
-            <button
+            <Btn
+              $isActive={plus}
+              disabled={!plus}
               onClick={() => {
                 setCounter((prev) => prev + 1);
                 dispatch(increase(item.price));
               }}
             >
               +
-            </button>
+            </Btn>
           </CounterBox>
           <Price>
-            <div>{item.price}원</div>
+            <div>{addCommas(item.price)}원</div>
           </Price>
         </BottomBox>
       </Content>

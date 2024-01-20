@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 350px;
@@ -19,24 +20,48 @@ const Sum = styled.div`
   line-height: 21.78px;
 `;
 
-const OrderBtn = styled.button`
+const OrderBtn = styled.button<{ $isActive: boolean }>`
   width: 301px;
   height: 47.92px;
   margin-top: 20px;
-  background-color: #c1c1c1;
+  background-color: ${(props) => props.color};
   font-size: 18px;
   line-height: 21.78px;
   color: #fff;
+  cursor: ${(props) => (props.$isActive ? "pointer" : "auto")};
 `;
 
 function OrderSummary() {
+  const navigate = useNavigate();
   const sum = useAppSelector((state) => state.order.counter);
   const price = useAppSelector((state) => state.order.price);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    setIsActive(sum > 0);
+  }, [sum]);
+
+  const addCommas = (price: number) => {
+    const commaprice = price.toLocaleString("ko-KR");
+    return commaprice;
+  };
+
+  const order = () => {
+    navigate("/complete");
+  };
+
   return (
     <Wrapper>
       <Sum>총 수량 : {sum}개</Sum>
-      <Sum>총 가격 : {price}원</Sum>
-      <OrderBtn>주문하기</OrderBtn>
+      <Sum>총 가격 : {addCommas(price)}원</Sum>
+      <OrderBtn
+        onClick={order}
+        disabled={!isActive}
+        color={sum <= 0 ? "#c1c1c1" : "#000000"}
+        $isActive={isActive}
+      >
+        주문하기
+      </OrderBtn>
     </Wrapper>
   );
 }
